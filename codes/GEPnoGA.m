@@ -209,19 +209,18 @@ outputArg1 = mse([Ctotal, sum(total_cost), sum(pollution)]);
 
 % Plot results
 figure;
-subplot(3,1,1);
 plot(1:num_years, total_cost, '-o');
 xlabel('Year');
 ylabel('Total Cost ($)');
 title('Total Cost over Planning Horizon');
 
-subplot(3,1,2);
+figure;
 plot(1:num_years, pollution, '-o');
 xlabel('Year');
 ylabel('Pollution (units)');
 title('Pollution over Planning Horizon');
 
-subplot(3,1,3);
+figure;
 plot(1:num_years, ENS, '-o');
 xlabel('Year');
 ylabel('Energy Not Served (MWh)');

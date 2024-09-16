@@ -21,6 +21,8 @@ for i = 1:numel(inputArg1)
         inputArg1(i) = 1;
     end
 end
+showRes(inputArg1)
+
 % Define Parameters
 num_years = 10; % Planning horizon in years
 num_plants = 3; % Number of potential new plants
@@ -102,19 +104,18 @@ end
 
 % Plot results
 figure;
-subplot(3,1,1);
 plot(1:num_years, total_cost, '-o');
 xlabel('Year');
 ylabel('Total Cost ($)');
 title('Total Cost over Planning Horizon');
 
-subplot(3,1,2);
+figure;
 plot(1:num_years, pollution, '-o');
 xlabel('Year');
 ylabel('Pollution (units)');
 title('Pollution over Planning Horizon');
 
-subplot(3,1,3);
+figure;
 plot(1:num_years, ENS, '-o');
 xlabel('Year');
 ylabel('Energy Not Served (MWh)');

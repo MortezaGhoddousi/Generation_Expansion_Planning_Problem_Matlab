@@ -14,13 +14,10 @@ function [outputArg1] = objectiveFunction(inputArg1)
     inv_cost = [1000, 800, 1200]; % Investment cost for new plants ($/MW)
     fuel_cost = [50, 60, 45]; % Fuel cost for plants ($/MWh)
     o_m_cost = [10, 12, 8]; % Operation & maintenance cost ($/MWh)
-    pollution_limit = [1000, 800, 1200]; % Pollution limit (units)
     demand_growth = 0.1; % Annual demand growth rate
     initial_demand = 500; % Initial demand (MW)
     pollution_rate = [0.5, 0.7, 0.4]; % Pollution rate per plant (units/MWh)
     FOR = [0.05, 0.08, 0.06]; % Forced outage rate
-    reserve_percentage = 15; % Reserve percentage
-    LOLP_max = 0.1; % Maximum acceptable LOLP
     Cost_ENSt = 10000; % Cost of energy not served (R/MWh)
 
     % Define demand response parameters
@@ -34,16 +31,10 @@ function [outputArg1] = objectiveFunction(inputArg1)
     total_cost = zeros(1, num_years);
     pollution = zeros(1, num_years);
 
-    % Define constraints
-    fuel_constraint = 10000; % Maximum fuel usage (units)
-    fuel_usage = [0.8, 0.9, 0.7]; % Fuel usage (units/MWh)
-    pollution_types = 1; % Number of pollution types
-
     % Loop over planning horizon
     for year = 1:num_years
         % Calculate annual demand
         demand = demand * (1 + demand_growth);
-        required_reserve = demand * reserve_percentage / 100;
         available_capacity = sum(capacity) - sum(FOR .* capacity);
 
         % Initialize annual costs
@@ -53,7 +44,7 @@ function [outputArg1] = objectiveFunction(inputArg1)
         CENS = 0;
 
         % Determine if new capacity is needed
-        [capacity, Cinv] = cons(year, capacity, Cinv, inputArg1, initial_capacity, inv_cost);
+        [capacity, Cinv] = cons(year, capacity, Cinv, inputArg1, initial_capacity, inv_cost, demand);
 
         % Calculate annual costs and pollution
         for i = 1:num_plants
@@ -68,7 +59,7 @@ function [outputArg1] = objectiveFunction(inputArg1)
             ENS = demand - available_capacity;
             CENS = Cost_ENSt * ENS;
         else
-            ENS = 0;
+            ENS = 0; %#ok
         end
 
         % Calculate total cost
